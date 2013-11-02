@@ -308,7 +308,8 @@ namespace ppcbooke{
             };
 
             enum ppc_fu_type {
-                ppc_fu_su         = 0x1,         // simple unit
+                ppc_fu_su1        = 0x1,         // simple unit 1
+                ppc_fu_su2        = 0x6,         // simple unit 2
                 ppc_fu_bu         = 0x2,         // branch unit
                 ppc_fu_mu         = 0x3,         // multiple unit
                 ppc_fu_lsu        = 0x4,         // load/store unit
