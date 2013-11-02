@@ -1,7 +1,9 @@
 #include <vector>
 #include <iomanip>
+#include <iostream>
 #include <string>
 #include <sstream>
+#include <cstdint>
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Copyright Vikas Chouhan (presentisgood@gmail.com) 2013/2014.
@@ -26,9 +28,10 @@
 // NOTE : This code needs to be compiled with gcc using stdc++0x standard.
 ////////////////////////////////////////////////////////////////////////////////////////
 
+#define PPC_SPE
 
-namespace ppcsimbooke{
-    namespace ppcsimbooke_dis{
+namespace ppcbooke{
+    namespace ppcbooke_dis{
         namespace details{
 
             // utility functions for converting integer to hex and decimal string forms
@@ -40,7 +43,7 @@ namespace ppcsimbooke{
             template<typename T>  std::string     TIS(uint32_t v) { std::stringstream t; t << static_cast<T>(v); return t.str(); }
 
             //////////////////////////////////////////////////////////////////////////
-            // powerpc opcodes (e500v2 only)
+            // powerpc opcodes (e500v2 booke only)
             //////////////////////////////////////////////////////////////////////////
 #if 0
             enum ppc_op {
@@ -526,8 +529,8 @@ namespace ppcsimbooke{
             typedef std::vector<uint32_t>       ppc_argsvt;
 
 
-#define PPCSIMBOOKE_OPC_ARG_INITIALIZER()                                                      \
-            std::string to_str()  { return "NULL"; }                                           \
+#define PPC_OPC_ARG_INITIALIZER()                                                      \
+            std::string to_str()  { return "NULL"; }                                   \
             ppc_argsvt args()     { return ppc_argsvt { 0xffffffff }; }
 
             //
@@ -544,7 +547,7 @@ namespace ppcsimbooke{
                 uint32_t   li      : 24;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // i_li
@@ -563,7 +566,7 @@ namespace ppcsimbooke{
                 uint32_t   bo      : 5;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // b_bo_bi_bd
@@ -579,7 +582,7 @@ namespace ppcsimbooke{
                 uint32_t   resv1   : 14;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // sc
@@ -599,7 +602,7 @@ namespace ppcsimbooke{
                 uint32_t   arg0    : 5;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // d_rt_ra_d
@@ -639,7 +642,7 @@ namespace ppcsimbooke{
                 uint32_t   arg0    : 5;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // x_rt_ra
@@ -739,7 +742,7 @@ namespace ppcsimbooke{
                 uint32_t   arg0    : 5;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // xl_bt_ba_bb
@@ -764,7 +767,7 @@ namespace ppcsimbooke{
                 uint32_t   arg0    : 5;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // xfx_rt_spr [ FIXME: May need to process arg1 for correct SPRNO.May also need to check args order ]
@@ -800,7 +803,7 @@ namespace ppcsimbooke{
                 uint32_t   arg0    : 5;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // xo_rt_ra_rb
@@ -824,7 +827,7 @@ namespace ppcsimbooke{
                 uint32_t   arg0    : 5;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // a_rt_ra_rb_bc
@@ -845,7 +848,7 @@ namespace ppcsimbooke{
                 uint32_t   arg0    : 5;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // m_rs_ra_rb_mb_me
@@ -868,7 +871,7 @@ namespace ppcsimbooke{
                 uint32_t   arg0    : 5;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // evx_rs_ra_rb
@@ -912,7 +915,7 @@ namespace ppcsimbooke{
                 uint32_t   arg0    : 5;
                 uint32_t   opc     : 6;
                 
-                PPCSIMBOOKE_OPC_ARG_INITIALIZER()
+                PPC_OPC_ARG_INITIALIZER()
             };
 
             // evs_rt_ra_rb
@@ -1112,6 +1115,11 @@ namespace ppcsimbooke{
                 const uint32_t       mask;
                 const std::string    name;
                 ppc_op_dec_base      *decptr;
+
+                // argument decoding & print functions
+                // NOTE : insn should be same as that used for extracting ppc_opcode struct
+                std::string             to_str(uint32_t insn)    { return name + " " + decptr->to_str(insn); }
+                std::vector<uint32_t>   to_args(uint32_t insn)   { return decptr->decode(insn); }
             };
 
             // standard masks
@@ -1706,7 +1714,48 @@ namespace ppcsimbooke{
                 // END TABLE
             };
 
-            static const size_t decode_table_size = sizeof(decode_table);
-        }
+            static const size_t decode_table_size = sizeof(decode_table)/sizeof(ppc_opcode);
+        } // end details
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //
+        // decoder class
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // instruction to primary opcode 
+        uint32_t insn_to_opc(uint32_t insn) { return (insn >> 26) & 0x3f; }
+
+        class ppcdis{
+            public:
+            // constructor
+            ppcdis(){}
+        
+            // Disassemble a 32 bit opcode & print it
+            void print_disasm(uint32_t insn, uint64_t pc=0, int le=0){
+                 struct details::ppc_opcode *table_entry;
+                 size_t  i = 0;
+
+                 // We reverse endianness if LITTLE endian specified
+                 if (le) { insn = (((insn >>  0) & 0xff) << 24) | (((insn >>  8) & 0xff) << 16) | (((insn >> 16) & 0xff) <<  8) | (((insn >> 24) & 0xff) <<  0) ; }
+
+                 // Get the table entry
+                 for(i=0; i<details::decode_table_size; i++){
+                     if((details::decode_table[i].mask & insn) == details::decode_table[i].opcode){ break; }
+                 }
+
+                 // No match found
+                 if(i == details::decode_table_size){
+                     std::cout << ".long " << details::TSH(insn) << std::endl;
+                     return;
+                 }
+
+                 // Get table entry
+                 table_entry = const_cast<struct details::ppc_opcode*>(&details::decode_table[i]);
+
+                 // print string form
+                 std::cout << table_entry->to_str(insn) << std::endl;
+            }
+
+        };
     }
 }
