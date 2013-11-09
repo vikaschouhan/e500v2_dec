@@ -852,16 +852,16 @@ namespace ppcbooke{
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt_pmr>::oprs()     { return ppc_oprsvt {opr_r,opr_p}; }
             template<> std::string    ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt_pmr>::to_str()   { return tostr_xfx_rt_pmr(arg0,arg1); }
             // xfx_rs_fxm
-            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_fxm>::args()     { return ppc_argsvt {arg0,((arg1 >> 1) & 0xff)}; }
-            template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_fxm>::oprs()     { return ppc_oprsvt {opr_r,opr_i}; }
+            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_fxm>::args()     { return ppc_argsvt {((arg1 >> 1) & 0xff),arg0}; }
+            template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_fxm>::oprs()     { return ppc_oprsvt {opr_i,opr_r}; }
             template<> std::string    ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_fxm>::to_str()   { return tostr_xfx_rs_fxm(arg0,((arg1 >> 1) & 0xff)); }
             // xfx_rs_spr
-            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_spr>::args()     { return ppc_argsvt {arg0,arg1}; }
-            template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_spr>::oprs()     { return ppc_oprsvt {opr_r,opr_s}; }
+            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_spr>::args()     { return ppc_argsvt {arg1,arg0}; }
+            template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_spr>::oprs()     { return ppc_oprsvt {opr_s,opr_r}; }
             template<> std::string    ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_spr>::to_str()   { return tostr_xfx_rs_spr(arg0,arg1); }
             // xfx_rs_pmr
-            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_pmr>::args()     { return ppc_argsvt {arg0,arg1}; }
-            template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_pmr>::oprs()     { return ppc_oprsvt {opr_r,opr_p}; }
+            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_pmr>::args()     { return ppc_argsvt {arg1,arg0}; }
+            template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_pmr>::oprs()     { return ppc_oprsvt {opr_p,opr_r}; }
             template<> std::string    ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_pmr>::to_str()   { return tostr_xfx_rs_pmr(arg0,arg1); }
 
             /////////////////////////
@@ -930,11 +930,11 @@ namespace ppcbooke{
             };
 
             // m_rs_ra_rb_mb_me
-            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_m, ppc_op_subform_m_rs_ra_rb_mb_me>::args()   { return ppc_argsvt {arg0,arg1,arg2,arg3,arg4}; }
+            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_m, ppc_op_subform_m_rs_ra_rb_mb_me>::args()   { return ppc_argsvt {arg1,arg0,arg2,arg3,arg4}; }
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_m, ppc_op_subform_m_rs_ra_rb_mb_me>::oprs()   { return ppc_oprsvt {opr_r,opr_r,opr_r,opr_i,opr_i}; }
             template<> std::string    ppc_op_bf<ppc_op_form_m, ppc_op_subform_m_rs_ra_rb_mb_me>::to_str() { return tostr_m_rs_ra_rb_mb_me(arg0,arg1,arg2,arg3,arg4); }
             // m_rs_ra_sh_mb_me
-            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_m, ppc_op_subform_m_rs_ra_sh_mb_me>::args()   { return ppc_argsvt {arg0,arg1,arg2,arg3,arg4}; }
+            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_m, ppc_op_subform_m_rs_ra_sh_mb_me>::args()   { return ppc_argsvt {arg1,arg0,arg2,arg3,arg4}; }
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_m, ppc_op_subform_m_rs_ra_sh_mb_me>::oprs()   { return ppc_oprsvt {opr_r,opr_r,opr_i,opr_i,opr_i}; }
             template<> std::string    ppc_op_bf<ppc_op_form_m, ppc_op_subform_m_rs_ra_sh_mb_me>::to_str() { return tostr_m_rs_ra_sh_mb_me(arg0,arg1,arg2,arg3,arg4); }
 
@@ -954,11 +954,11 @@ namespace ppcbooke{
                 PPC_OPC_ARG_INITIALIZER()
             };
 
-            // evx_rs_ra_rb
+            // evx_rs_ra_rb [FIXME: Verify args order]
             template<> ppc_argsvt     ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rs_ra_rb>::args()   { return ppc_argsvt {arg0,arg1,arg2}; }
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rs_ra_rb>::oprs()   { return ppc_oprsvt {opr_r,opr_r,opr_r}; }
             template<> std::string    ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rs_ra_rb>::to_str() { return tostr_evx_rs_ra_rb(arg0,arg1,arg2); }
-            // evx_rs_ra_ui
+            // evx_rs_ra_ui [FIXME: Verify args order]
             template<> ppc_argsvt     ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rs_ra_ui>::args()   { return ppc_argsvt {arg0,arg1,arg2}; }
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rs_ra_ui>::oprs()   { return ppc_oprsvt {opr_r,opr_r,opr_i}; }
             template<> std::string    ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rs_ra_ui>::to_str() { return tostr_evx_rs_ra_ui(arg0,arg1,arg2); }
@@ -975,8 +975,8 @@ namespace ppcbooke{
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rt_ra>::oprs()      { return ppc_oprsvt {opr_r,opr_r}; }
             template<> std::string    ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rt_ra>::to_str()    { return tostr_evx_rt_ra(arg0,arg1); }
             // evx_rt_ui_rb [ FIXME: Verify args order ]
-            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rt_ui_rb>::args()   { return ppc_argsvt {arg0,arg1,arg2}; }
-            template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rt_ui_rb>::oprs()   { return ppc_oprsvt {opr_r,opr_i,opr_r}; }
+            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rt_ui_rb>::args()   { return ppc_argsvt {arg0,arg2,arg1}; }
+            template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rt_ui_rb>::oprs()   { return ppc_oprsvt {opr_r,opr_r,opr_i}; }
             template<> std::string    ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_rt_ui_rb>::to_str() { return tostr_evx_rt_ui_rb(arg0,arg1,arg2); }
             // evx_bf_ra_rb
             //template<> ppc_argsvt           ppc_op_bf<ppc_op_form_evx, ppc_op_subform_evx_bf_ra_rb>::args()   { return ppc_argsvt {arg0,arg1,arg2}; }
