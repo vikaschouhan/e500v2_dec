@@ -833,6 +833,9 @@ namespace ppcbooke{
                 uint32_t   opc     : 6;
                 
                 PPC_OPC_ARG_INITIALIZER()
+                //void       f_spr(uint32_t spr){ arg1 = ((spr & 0x1f) << 5) | ((spr & 0x3e0) >> 5); }
+                uint32_t   t_spr(){ return ((arg1 & 0x1f) << 5) | ((arg1 & 0x3e0) >> 5); }
+                uint32_t   t_pmr(){ return ((arg1 & 0x1f) << 5) | ((arg1 & 0x3e0) >> 5); }
             };
 
             ///////////////
@@ -840,7 +843,7 @@ namespace ppcbooke{
             // FIXME : Verify operand ordering of mtspr/mfspr/mtpmr/mfpmr instruction types.
             //////////////
             // xfx_rt_spr [ FIXME: May need to process arg1 for correct SPRNO.May also need to check args order ]
-            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt_spr>::args()     { return ppc_argsvt {arg0,arg1}; }
+            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt_spr>::args()     { return ppc_argsvt {arg0,t_spr()}; }
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt_spr>::oprs()     { return ppc_oprsvt {opr_r,opr_s}; }
             template<> std::string    ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt_spr>::to_str()   { return tostr_xfx_rt_spr(arg0,arg1); }
             // xfx_rt
@@ -848,7 +851,7 @@ namespace ppcbooke{
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt>::oprs()         { return ppc_oprsvt {opr_r}; }
             template<> std::string    ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt>::to_str()       { return tostr_xfx_rt(arg0); }
             // xfx_rt_pmr
-            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt_pmr>::args()     { return ppc_argsvt {arg0,arg1}; }
+            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt_pmr>::args()     { return ppc_argsvt {arg0,t_pmr()}; }
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt_pmr>::oprs()     { return ppc_oprsvt {opr_r,opr_p}; }
             template<> std::string    ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rt_pmr>::to_str()   { return tostr_xfx_rt_pmr(arg0,arg1); }
             // xfx_rs_fxm
@@ -856,11 +859,11 @@ namespace ppcbooke{
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_fxm>::oprs()     { return ppc_oprsvt {opr_i,opr_r}; }
             template<> std::string    ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_fxm>::to_str()   { return tostr_xfx_rs_fxm(arg0,((arg1 >> 1) & 0xff)); }
             // xfx_rs_spr
-            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_spr>::args()     { return ppc_argsvt {arg1,arg0}; }
+            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_spr>::args()     { return ppc_argsvt {t_spr(),arg0}; }
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_spr>::oprs()     { return ppc_oprsvt {opr_s,opr_r}; }
             template<> std::string    ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_spr>::to_str()   { return tostr_xfx_rs_spr(arg0,arg1); }
             // xfx_rs_pmr
-            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_pmr>::args()     { return ppc_argsvt {arg1,arg0}; }
+            template<> ppc_argsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_pmr>::args()     { return ppc_argsvt {t_pmr(),arg0}; }
             template<> ppc_oprsvt     ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_pmr>::oprs()     { return ppc_oprsvt {opr_p,opr_r}; }
             template<> std::string    ppc_op_bf<ppc_op_form_xfx, ppc_op_subform_xfx_rs_pmr>::to_str()   { return tostr_xfx_rs_pmr(arg0,arg1); }
 
@@ -1591,7 +1594,7 @@ namespace ppcbooke{
                 { ppc_op_tomask        (28),              op_mask,              "andi.",       &ppc_obj_subform_d_rs_ra_ui     },
                 { ppc_op_tomask        (29),              op_mask,              "andis.",      &ppc_obj_subform_d_rs_ra_ui     },
 
-                { ppc_x_tomask         (31,    0, 0),     d_bf_l_ra_rb_mask,    "cmp",         &ppc_obj_subform_x_bf_l_ra_rb   },
+                { ppc_x_tomask         (31,    0, 0),     x_bf_l_ra_rb_mask,    "cmp",         &ppc_obj_subform_x_bf_l_ra_rb   },
                 { ppc_x_tomask         (31,    4, 0),     x_mask,               "tw",          &ppc_obj_subform_x_to_ra_rb     },
                
                 { ppc_xo_tomask        (31,    8, 0, 0),  xo_mask,              "subfc",       &ppc_obj_subform_xo_rt_ra_rb    },
