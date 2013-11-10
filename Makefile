@@ -4,7 +4,7 @@ CXX            := g++
 EXES           := e500v2_dec_main
 SRC_ROOT       := .
 
-HOST_CXXFLAGS  := -I$(SRC_ROOT) -std=c++0x -Wno-narrowing
+HOST_CXXFLAGS  := -I$(SRC_ROOT) -std=c++0x -Wall -O2
 
 all: e500v2_dec_main
 
